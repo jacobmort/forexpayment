@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<!-- 
+Sample file for Charting Library
+
+Copyright 2012 by ChartIQ LLC 
+-->
+
+<head>
+<meta charset="utf-8" />
+<title>ChartIQ</title>
+<!-- Use these meta tags to bypass safari touch events on ipad, otherwise scrolling and drawing will not work -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- Sample css file may be customized -->
+<link rel="stylesheet" type="text/css" href="stx-demo.css" media="screen" />
+
+
+<!--[if !IE 8]><!--><script type="text/javascript" src="Intl.js"></script><!--<![endif]--><!-- W3C intl support. Use this until browsers have internal support for ECMA-402. Not compatible with IE8 -->
+
+<!-- These Javascript files should be included here, before HTML -->
+<script type="text/javascript" src="iscroll.js"></script>
+<script type="text/javascript" src="stxUtilities.js"></script>
+<script type="text/javascript" src="stxMarket.js"></script>
+<script type="text/javascript" src="stxI18N.js"></script><!-- Sample translation support -->
+<script type="text/javascript" src="stxStudies.js"></script>
+</head>
+
+<body onLoad="displayChart()" style="overflow:hidden">
+<!------------------------------------------ PAGE CONTENTS ------------------------------------------>
+        <div id="chartContainer">
+        <div id="chartControls" style="display:none">
+          <div id="chartSize"> <span id="zoomOut"  class="minus">-</span> <span id="zoomIn" class="plus">-</span> </div>
+          <div id="home" class="home btn" style="display:none"><span>Today</span></div>
+        </div>
+        <div id="iconsTemplate" class="icons" style="display: none;">
+          <div id="iconsTitle">Title</div>
+          <div class="btn icon"><span class="up">&nbsp;</span></div>
+          <div class="btn icon"><span class="focus">&nbsp;</span></div>
+          <div class="btn icon"><span class="down">&nbsp;</span></div>
+          <div class="btn icon"><span class="close">&nbsp;</span></div>
+        </div>
+        <div id="handleTemplate" class="handle" style="display: none;"><span>Drag</span></div>
+        <div id="floatDate" class="hd" style="display: none;"></div>
+        <div id="floatVolume" class="hd" style="display: none;"></div>
+        <div id="floatHR" class="vd" style="display: none;"></div>
+        <div id="currentHR" class="vd" style="display: none;"></div>
+        <div id="crossY" class="stx_crosshair" style="display: none;"></div>
+        <div id="crossX" class="stx_crosshair" style="display: none;"></div>
+      </div>
+
+<!--
+Include these files *after* the required HTML components
+--> 
+<script type="text/javascript" src="stxChart.js"></script> 
+<script type="text/javascript" charset="ISO-8859-1" src="stxModulus.js"></script> 
+<script type="text/javascript" charset="ISO-8859-1" src="stxKernelOs.js"></script> 
+<script type="text/javascript" charset="ISO-8859-1" src="stxUI.js"></script> 
+<script>
+
+var stxx=new STXChart();
+stxx.manageTouchAndMouse=true;						// Chart engine manages it's own touch and mouse events, required when displaying multiple charts. Comment out document level management in main() when using this mechanism.
+
+//Once a JavaScript array of quotes is in the required format, these are the steps necessary to rended a chart
+function loadChart(){
+	// Set the internal symbol so that the display on the chart is correct
+	stxx.chart.symbol='USD';
+	// Initialize the data
+	stxx.setMasterData([{Open : 1, Date: "201311091514", High: 1, Low: 1, Close: 1, Volume: 1}]);
+	// Create an initial data set. This step runs the calculations for any selected studies. Note that this
+	// method gets called whenever a study is added or whenever periodicity is changed
+	stxx.createDataSet();
+	// This initializes the chart to the container. Any existing canvases are removed.
+	stxx.initializeChart($$("chartContainer"));
+	// Draw the chart. This function will be called whenever the user scrolls, zooms, draws, etc
+	stxx.draw();
+	// Display the chart controls for zooming
+	/*var inputs={
+			Period: "14"
+	};
+	var sd=STXStudies.quickAddStudy(stxx, "rsi", inputs);
+	sd.permanent=true;*/
+	stxx.draw();
+}
+
+
+
+
+function displayChart(){
+	loadChart();
+	//streamSimulation();
+}
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE HTML>
+<!-- Sample file for Charting Library
+//-------------------------------------------------------------------------------------------
+//Copyright 2012 by ChartIQ LLC
+//-------------------------------------------------------------------------------------------
+-->
+<!--
+This file demonstrates how to display multiple charts on the same browser screen without the use of iframes. In this case
+we display two charts, each with it's own menu and dialogs. Note that this is not necessary. You may design a system with
+multiple charts that leverage a single universal menuing system. You will simply need to restructure the HTML as appropriate.
+
+You must however have a separate chart container <div> for each chart that you wish to display on the screen. In this
+example we use chartContainer1 and chartContainer2. When an STXChart object is constructed simply pass the appropriate
+container into the constructor. As such, in your implementation you may opt to build the containers dynamically in JavaScript if
+you will have many charts on a screen or if you are providing users with the ability to dynamically add or remove charts
+
+The remaining methodology for charting remains the same. Some of the methods from sample.html have been rewritten here
+to accept an additional stxx parameter. These hopefully should be easy to follow.
+-->
+<html>
+<head>
+
+<!-- Use these meta tags to bypass safari touch events on ipad, otherwise scrolling and drawing will not work -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+<!-- Sample css file may be customized -->
+<link rel="stylesheet" type="text/css" href="sample_style.css" media="screen" />
+
+<!-- Sample stock prices data -->
+<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
+<script type="text/javascript" src="SAMPLEDATA.js"></script>
+<script type="text/javascript" src="SAMPLEINTRADAY.js"></script>
+
+<!-- These Javascript files should be included here, before HTML -->
+<script type="text/javascript" src="stxUtilities.js"></script>
+<script type="text/javascript" src="stxMarket.js"></script>
+<script type="text/javascript" src="stxStudies.js"></script>
+<script type="text/javascript" src="stxSocial.js"></script>
+</head>
+
+<body onLoad="displayChart()">
+
+ 
+<!------------------------------------------ PAGE CONTENTS ------------------------------------------>
+
+<div class="multi contentWrapper" id="wrapper1">
+  
+  <!-- Indicator Dialogues -->
+  <div id="studyDialogContainer">
+  
+    <!-- The studyDialog is a general purpose dialog for entering the parameters for studies. It may be customized so long
+    as the id and class names remain the same. Note that it contains templates which are replicated dynamically -->
+  
+    <div id="studyDialog" style="display:none;" class="dialog">
+      <div class="title">Study Title</div>
+      <div onClick="dismissStudyDialog(this.parentNode);" class="btn close"><span class="close">Close</span></div>
+      <div id="inputs">
+        <div class="inputTemplate" style="display:none">
+          <div class="heading">Heading</div>
+          <div class="data"></div>
+        </div>
+      </div>
+      <div id="outputs">
+      <hr/>
+        <div class="outputTemplate" style="display:none">
+          <div class="heading">Heading</div>
+          <div class="color"><span></span></div>
+        </div>
+      </div>
+      <div onClick="createStudy(this.parentNode);dismissStudyDialog(this.parentNode);" class="btn go">Create</div>
+    </div>
+  
+  </div> 
+
+    <div class="topBar">
+    
+        <div id="search">
+            <input id="symbol1" name="symbol" style="width: 70px;" autocapitalize="off" autocorrect="off" spellcheck="off" placeholder="Symbol">
+        </div>
+        
+        <div id="options">
+            <div class="btn option" onClick="toggleCrosshairs(stxx1)">+</div>
+            <div id="shareButton" class="btn option" onClick="shareChart()" style="display:none">Share</div>
+            <div style="display:inline-block;"><a id="shareLink"></a></div>
+        </div>
+        
+        <!-- These are very basic sample menus. You may replace these with another menuing system. Just follow the same onClick convention
+		or provide proxy functions that call the same code-->
+        
+        <div id="menus">
+            <div class="btn menu" onClick="toggleMenu('studies1')">Studies <em>&#9660;</em></div>
+            <div class="btn menu" onClick="toggleMenu('draw1')">Draw <em>&#9660;</em></div>
+            <div class="btn menu" onClick="toggleMenu('periodicity1')">Period <em>&#9660;</em></div>
+        </div>
+        
+        <div id="studies1" class="multi studies menuSelect" style="display:none;">
+          <div class="col">
+            <div onClick="toggleMenu('studies1');studyDialog(stxx1, this, 'rsi');">RSI</div>
+            <div onClick="toggleMenu('studies1');studyDialog(stxx1, this, 'ma');">Moving Average</div>
+          </div>
+        </div>
+        
+        <div id="draw1" class="draw menuSelect" style="display:none;">
+            <div onClick="toggleMenu('draw1');setVectorType(stxx1,'annotation');">Annotation</div>
+            <div onClick="toggleMenu('draw1');setVectorType(stxx1,'fib retrace');">Fibonacci</div>
+            <div onClick="toggleMenu('draw1');setVectorType(stxx1,'horizontal');">Horizontal</div>
+            <div onClick="toggleMenu('draw1');setVectorType(stxx1,'line');">Line</div>
+            <div onClick="toggleMenu('draw1');setVectorType(stxx1,'ray');">Ray</div>
+            <div onClick="toggleMenu('draw1');setVectorType(stxx1,'segment');">Segment</div>
+            <div onClick="toggleMenu('draw1');setVectorType(stxx1,'');">None</div>
+        </div>
+        
+        <div id="periodicity1" class="periodicity menuSelect" style="display:none;">
+            <div onClick="toggleMenu('periodicity1');setPeriodicity(stxx1, 1,'day')">1 Day</div>
+            <div onClick="toggleMenu('periodicity1');setPeriodicity(stxx1, 1,'week')">1 Week</div>
+        </div>
+    </div>
+  <div class="multi chartWrapper">
+    <!-- This is the container for the chart itself. This div will be passed in to the STXChart object. You may place this
+    anywhere on your page. Keep the chartControls div embedded within the container for full functionality. The chart canvas
+    will automatically size itself to the dimensions of the chartContainer but it will not automatically resize if the container
+    dimensions change. Therefore, if your container is limited by screen dimensions then you must detect screen resizing events
+    and call STXChart.resizeChart() when those events happen. For instance, on a mobile device when an orientation change occurs.
+    -->
+    <div class="multi" id="chartContainer1">
+    <!--[if IE]><canvas id="ie8canvas" width="0" height="0" style="display:none"></canvas><![endif]-->
+    <!--[if IE]><canvas id="ie8canvasTemp" width="0" height="0" style="display:none"></canvas><![endif]-->
+    
+    <!------------------------------------------ CHART TEMPLATES  ------------------------------------------>
+	    <!-- Chart Controls (Includes zooming/panning and "jump" to today) -->
+	    <div id="chartControls" style="display:none">
+	      <div id="chartSize">
+	        <span id="zoomOut" onMouseOver="modalBegin(stxx1)" onMouseOut="modalEnd(stxx1)" class="minus">-</span>
+	        <span id="zoomIn" onMouseOver="modalBegin(stxx1)" onMouseOut="modalEnd(stxx1)" class="plus">-</span>
+	      </div>
+	      <div id="home" class="home" style="display:none"><span>Today</span></div>
+	    </div>
+	
+	    <!-- These are html "templates" they are hidden html components which are replicated by the STXChart object
+	    to create the chart controls. Customization of these is not recommended -->
+	
+	    <div id="iconsTemplate" class="icons" style="display: none;">
+	      <div id="iconsTitle">Title</div>
+	      <div class="btn"><span class="up">&nbsp;</span></div>
+	      <div class="btn"><span class="focus">&nbsp;</span></div>
+	      <div class="btn"><span class="down">&nbsp;</span></div>
+	    </div>
+	    <div id="closeXTemplate" class="closeX" style="position: absolute; left: 0px; top: 0px; display: none;">
+	      <div class="btn"><span class="trash">&nbsp;</span></div>
+	    </div>
+	
+	    <!-- Panel Size Control -->
+	    <div id="handleTemplate" class="handle" style="display: none;"><span>Drag</span></div> 
+	    <!-- Chart Floating Overlay Templates -->
+	    <div id="floatDate" class="hd" style="display: none;"></div>
+	    <div id="floatVolume" class="hd" style="display: none;"></div>
+	    <div id="floatHR" class="vd" style="display: none;"></div>
+	    <div id="currentHR" class="vd" style="display: none;"></div>
+	    <div id="showMeasure" class="showMeasure"> <span class="sMeasure">measure</span> <span id="vectorTrashCan" class="btn" style="display:none"><span class="trash">&nbsp;</span></span> </div>
+	    <div id="mSticky"> <span></span> <span id="overlayTrashCan" class="btn" style="display:none"><span class="trash">&nbsp;</span></span> </div>
+	    <span id="annotationSave" class="click">save</span> <span id="annotationCancel" class="click" style="margin-left:10px;">cancel</span>
+	    <div id="crossY" class="stx_crosshair" style="display:none"></div>
+	    <div id="crossX" class="stx_crosshair" style="display:none"></div>
+	  </div>
+  </div>  
+</div>
+
+
+<div class="multi contentWrapper" id="wrapper2">
+
+<!-- Indicator Dialogues -->
+<div id="studyDialogContainer">
+
+  <!-- The studyDialog is a general purpose dialog for entering the parameters for studies. It may be customized so long
+  as the id an class names remain the same. Note that it contains templates which are replicated dynamically -->
+
+  <div id="studyDialog" style="display:none;" class="dialog">
+    <div class="title">Study Title</div>
+    <div onClick="dismissStudyDialog(this.parentNode);" class="btn close"><span class="close">Close</span></div>
+    <div id="inputs">
+      <div class="inputTemplate" style="display:none">
+        <div class="heading">Heading</div>
+        <div class="data"></div>
+      </div>
+    </div>
+    <div id="outputs">
+    <hr/>
+      <div class="outputTemplate" style="display:none">
+        <div class="heading">Heading</div>
+        <div class="color"><span></span></div>
+      </div>
+    </div>
+    <div onClick="createStudy(this.parentNode);dismissStudyDialog(this.parentNode);" class="btn go">Create</div>
+  </div>
+
+</div> 
+
+  <div class="topBar">
+  
+      <div id="search">
+          <input id="symbol2" name="symbol" style="width: 70px;" autocapitalize="off" autocorrect="off" spellcheck="off" placeholder="Symbol">
+      </div>
+      
+      <div id="options">
+          <div class="btn option" onClick="toggleCrosshairs(stxx2)">+</div>
+          <div id="shareButton" class="btn option" onClick="shareChart()" style="display:none">Share</div>
+          <div style="display:inline-block;"><a id="shareLink"></a></div>
+      </div>
+      
+      <!-- These are very basic sample menus. You may replace these with another menuing system. Just follow the same onClick convention
+		or provide proxy functions that call the same code-->
+      
+      <div id="menus">
+          <div class="btn menu" onClick="toggleMenu('studies2')">Studies <em>&#9660;</em></div>
+          <div class="btn menu" onClick="toggleMenu('draw2')">Draw <em>&#9660;</em></div>
+          <div class="btn menu" onClick="toggleMenu('periodicity2')">Period <em>&#9660;</em></div>
+      </div>
+      
+      <div id="studies2" class="multi studies menuSelect" style="display:none;">
+        <div class="col">
+          <div onClick="toggleMenu('studies2');studyDialog(stxx2, this, 'rsi');">RSI</div>
+          <div onClick="toggleMenu('studies2');studyDialog(stxx2, this, 'ma');">Moving Average</div>
+        </div>
+
+      </div>
+      
+      <div id="draw2" class="menuSelect draw" style="display:none;">
+          <div onClick="toggleMenu('draw2');setVectorType(stxx2,'annotation');">Annotation</div>
+          <div onClick="toggleMenu('draw2');setVectorType(stxx2,'fib retrace');">Fibonacci</div>
+          <div onClick="toggleMenu('draw2');setVectorType(stxx2,'horizontal');">Horizontal</div>
+          <div onClick="toggleMenu('draw2');setVectorType(stxx2,'line');">Line</div>
+          <div onClick="toggleMenu('draw2');setVectorType(stxx2,'ray');">Ray</div>
+          <div onClick="toggleMenu('draw2');setVectorType(stxx2,'segment');">Segment</div>
+          <div onClick="toggleMenu('draw2');setVectorType(stxx2,'');">None</div>
+      </div>
+      
+      <div id="periodicity2" class="periodicity menuSelect " style="display:none;">
+          <div onClick="toggleMenu('periodicity2');setPeriodicity(stxx2, 1,'day')">1 Day</div>
+          <div onClick="toggleMenu('periodicity2');setPeriodicity(stxx2, 1,'week')">1 Week</div>
+      </div>
+  </div>
+<div class="multi chartWrapper">
+  <!-- This is the container for the chart itself. This div will be passed in to the STXChart object. You may place this
+  anywhere on your page. Keep the chartControls div embedded within the container for full functionality. The chart canvas
+  will automatically size itself to the dimensions of the chartContainer but it will not automatically resize if the container
+  dimensions change. Therefore, if your container is limited by screen dimensions then you must detect screen resizing events
+  and call STXChart.resizeChart() when those events happen. For instance, on a mobile device when an orientation change occurs.
+  -->
+  <div class="multi" id="chartContainer2">
+  <!--[if IE]><canvas id="ie8canvas" width="0" height="0" style="display:none"></canvas><![endif]-->
+  <!--[if IE]><canvas id="ie8canvasTemp" width="0" height="0" style="display:none"></canvas><![endif]-->
+  
+  <!------------------------------------------ CHART TEMPLATES  ------------------------------------------>
+	    <!-- Chart Controls (Includes zooming/panning and "jump" to today) -->
+	    <div id="chartControls" style="display:none">
+	      <div id="chartSize">
+	        <span id="zoomOut" onMouseOver="modalBegin(stxx2)" onMouseOut="modalEnd(stxx2)" class="minus">-</span>
+	        <span id="zoomIn" onMouseOver="modalBegin(stxx2)" onMouseOut="modalEnd(stxx2)" class="plus">-</span>
+	      </div>
+	      <div id="home" class="home" style="display:none"><span>Today</span></div>
+	    </div>
+	
+	    <!-- These are html "templates" they are hidden html components which are replicated by the STXChart object
+	    to create the chart controls. Customization of these is not recommended -->
+	
+	    <div id="iconsTemplate" class="icons" style="display: none;">
+	      <div id="iconsTitle">Title</div>
+	      <div class="btn"><span class="up">&nbsp;</span></div>
+	      <div class="btn"><span class="focus">&nbsp;</span></div>
+	      <div class="btn"><span class="down">&nbsp;</span></div>
+	    </div>
+	    <div id="closeXTemplate" class="closeX" style="position: absolute; left: 0px; top: 0px; display: none;">
+	      <div class="btn"><span class="trash">&nbsp;</span></div>
+	    </div>
+	
+	    <!-- Panel Size Control -->
+	    <div id="handleTemplate" class="handle" style="display: none;"><span>Drag</span></div> 
+	    <!-- Chart Floating Overlay Templates -->
+	    <div id="floatDate" class="hd" style="display: none;"></div>
+	    <div id="floatVolume" class="hd" style="display: none;"></div>
+	    <div id="floatHR" class="vd" style="display: none;"></div>
+	    <div id="currentHR" class="vd" style="display: none;"></div>
+	    <div id="showMeasure" class="showMeasure"> <span class="sMeasure">measure</span> <span id="vectorTrashCan" class="btn" style="display:none"><span class="trash">&nbsp;</span></span> </div>
+	    <div id="mSticky"> <span></span> <span id="overlayTrashCan" class="btn" style="display:none"><span class="trash">&nbsp;</span></span> </div>
+	    <span id="annotationSave" class="click">save</span> <span id="annotationCancel" class="click" style="margin-left:10px;">cancel</span>
+	    <div id="crossY" class="stx_crosshair" style="display:none"></div>
+	    <div id="crossX" class="stx_crosshair" style="display:none"></div>
+	  </div>
+</div>  
+</div>
+<!--
+IE8 is supported through the excanvas.js library. For IE8, canvas elements must be included in the html
+code itself. The library will clone these canvases internally. If you don't plan on supporting IE8 you
+can safely remove these elements.
+-->
+<!--[if IE]><canvas id="ie8canvas" width="0" height="0" style="display:none"></canvas><![endif]-->
+<!--[if IE]><canvas id="ie8canvasTemp" width="0" height="0" style="display:none"></canvas><![endif]-->
+
+<!--
+Include these files *after* the required HTML components
+-->
+<script type="text/javascript" src="stxChart.js"></script>
+<script type="text/javascript" charset="ISO-8859-1" src="stxModulus.js"></script>
+<script type="text/javascript" charset="ISO-8859-1" src="stxKernelOs.js"></script>
+<script>
+
+// Declare a STXChart object. This is the main object for drawing charts
+var stxx1=new STXChart($$("chartContainer1"));
+var stxx2=new STXChart($$("chartContainer2"));
+stxx1.manageTouchAndMouse=true;
+stxx2.manageTouchAndMouse=true;
+
+
+
+//Once a JavaScript array of quotes is in the required format, these are the steps necessary to rended a chart
+function loadChart(stxx, symbol, quotes){
+	// The market times are only necessary if you are displaying intraday charts. If so, be sure to set the times
+	// accordingly for your exchange
+	stxx.chart.beginHour=9;
+	stxx.chart.beginMinute=30;
+	stxx.chart.endHour=16;
+	stxx.chart.endMinute=0;
+	stxx.chart.minutesInSession=390;
+	
+	// Set the internal symbol so that the display on the chart is correct
+	stxx.chart.symbol=symbol;
+	// Initialize the data
+	stxx.setMasterData(quotes);
+	// Create an initial data set. This step runs the calculations for any selected studies. Note that this
+	// method gets called whenever a study is added or whenever periodicity is changed
+	stxx.createDataSet();
+	// This initializes the chart to the container. Any existing canvases are removed.
+	stxx.initializeChart();
+	// Draw the chart. This function will be called whenever the user scrolls, zooms, draws, etc
+	stxx.draw();	
+}
+
+
+//This is a sample function to demonstrate how to convert a JavaScript array into an appropriate
+//JSON object for the quote engine. Adj_Close should be the closing price adjusted for splits or dividends.
+//If that data is not available then set it the same as Close. Most Date formats are supported. Use American
+//formats such as MM-DD-YYYY
+function convertArrayToJson(quotes){
+	var jsObj=[];
+	for(var i=0;i<quotes.length;i++){
+		jsObj[i]={};
+		jsObj[i].Date=quotes[i][0];
+		jsObj[i].Open=quotes[i][1];
+		jsObj[i].High=quotes[i][2];
+		jsObj[i].Low=quotes[i][3];
+		jsObj[i].Close=quotes[i][4];
+		jsObj[i].Volume=quotes[i][5];
+		jsObj[i].Adj_Close=quotes[i][6];
+	}
+	return jsObj;
+}
+
+// This is a sample to demonstrate how the results of the open Yahoo Finance API can be used
+// to generate chart data. Be sure to use the Yahoo Finance symbol format (symbology) in the input box
+function convertYahooResults(quotes){
+	if(quotes && quotes.length==0) return;
+	for(var i=0;i<quotes.length;i++){
+		quotes[i].Open=parseFloat(quotes[i].Open);
+		quotes[i].Close=parseFloat(quotes[i].Close);
+		quotes[i].High=parseFloat(quotes[i].High);
+		quotes[i].Low=parseFloat(quotes[i].Low);
+		quotes[i].Volume=parseFloat(quotes[i].Volume);
+		quotes[i].Adj_Close=parseFloat(quotes[i].Adj_Close);
+	}
+	if(quotes.length>1){	// Weird Yahoo thing where they give duped bars after hours
+		if(quotes[quotes.length-1].Date==quotes[quotes.length-2].Date){
+			quotes.pop();
+		}
+	}
+}
+
+// Callback function for Yahoo API
+function cbfunc(yqlResult){
+	var count=yqlResult.query.count;
+	if(count>0){
+		var quotes=yqlResult.query.results.quote;
+		quotes.reverse();
+		convertYahooResults(quotes);
+		loadChart(temporarySTXX, temporarySTXX.tempSymbol, quotes);
+	}
+}
+
+// Example of how to retrieve data from Yahoo API. This utilizes so called JSONP concept. Note that Yahoo API is not
+// always available. This code does not error check and so a user may simply experience nothing if the Yahoo API
+// is down. Do not use in production without adding code to detect "unavailable" responses from Yahoo.
+var seq=0;	// Use a sequential counter to prevent IE from caching Yahoo script
+var temporarySTXX=null;	// Used to store which chart so that when the callback comes through it knows
+function getYahooQuotes(symbol, stxx){
+	stxx.tempSymbol=symbol;
+	temporarySTXX=stxx;
+	var today=new Date();
+	var curr_date = today.getDate();
+	if(curr_date<10) curr_date="0" + curr_date;
+	var curr_month = today.getMonth()+1;
+	if(curr_month<10) curr_month="0" + curr_month;
+	var curr_year = today.getFullYear();
+
+	var yyyymmdd=curr_year + "-" + curr_month + "-" + curr_date;
+	var yyyymmdd2=(curr_year-1) + "-" + curr_month + "-" + curr_date;
+	var url="http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%3D'" + symbol + "'%20and%20startDate%3D'" + yyyymmdd2 + "'%20and%20endDate%3D'" + yyyymmdd + "'&format=json&diagnostics=true&env=http%3A%2F%2Fdatatables.org%2Falltables.env&callback=cbfunc" + "&seq=" + seq++;
+	var newScript=document.createElement("script");
+	newScript.src=url;
+	document.body.appendChild(newScript);
+}
+
+// If a browser has localStorage then it most likely supports all the functionality necessary for this application.
+function testCompatibility(){
+	if (typeof(localStorage) == 'undefined' ) {
+		STX.alert('Your browser does not support HTML5. Please upgrade to the latest version.');
+	}
+}
+
+// Detect hitting the "enter" key in the input box.
+function symbolKeyUp(e, stxx){
+	var div=getEventDOM(e);
+	var key = (window.event) ? event.keyCode : e.keyCode;
+	switch(key){
+		case 13:
+			getYahooQuotes(this.value, stxx);
+			break;
+		case 27:
+			this.value=stxx.chart.symbol;
+			break
+		default:
+			break;
+	}
+	e = e||event;
+	e.stopPropagation? e.stopPropagation() : e.cancelBubble = true;
+}
+
+function setVectorType(stxx, vectorType){
+	stxx.cancelTouchSingleClick=true;
+	stxx.changeVectorType(vectorType);
+}
+
+function toggleCrosshairs(stxx){
+	stxx.layout.crosshair=!stxx.layout.crosshair;
+	stxx.draw();
+	stxx.changeOccurred("layout");
+	stxx.doDisplayCrosshairs();
+}
+
+// Any periodicity is supported for intervals "day", "week" or "month", so long as the data set is large enough. We do not
+// include "month" in the sample because Yahoo only returns one year of data. If interval is "minute" then you must
+// supply a master data set that is precalculated for the desired periodicity through the callback function STXChart.intradayDataCallback
+// Check STXChart.layout.interval and STXChart.layout.periodicity for current values
+function setPeriodicity(stxx, periodicity, interval){
+	stxx.setPeriodicityV2(periodicity, interval);
+}
+
+// Creates a new study derived from the contents of the studyDialog that is passed in
+function createStudy(node){
+	STXStudies.go(node);
+}
+
+// Creates a panel that contains volume data. Volume panels are always named "vchart"
+function createVolumePanel(){
+	if(stxx.panelExists("vchart")) return;
+	stxx.createPanel("Volume", "vchart", 100);
+	stxx.draw();
+}
+
+// Underlays volume data under the chart itself
+function toggleVolumeUnderlay(){
+	stxx.setVolumeUnderlay(!stxx.layout.volumeUnderlay);
+}
+
+// Call this function before any modal operations that should suspend chart mouse or touch events
+function modalBegin(stxx){
+	stxx.openDialog="modal";
+	stxx.undisplayCrosshairs();
+}
+
+// Call this function to release the modal state. Note the use of cancelTouchSingleClick so that the chart
+// does not interpret a closing dialog tap as a chart event
+function modalEnd(stxx){
+	stxx.cancelTouchSingleClick=true;
+	stxx.openDialog="";
+	stxx.doDisplayCrosshairs();
+}
+
+// Convenience function for dismissing the study dialog. Note that we make sure that the color picker is closed with the dialog.
+function dismissStudyDialog(node){
+	stxx1.openDialog="";
+	stxx2.openDialog="";
+	node.style.display="none";
+	if(STXStudies.colorPickerDiv!=null) STXStudies.colorPickerDiv.style.display="none";
+}
+
+// Indirection function for creating the study dialog.
+function studyDialog(stxx, obj, study){
+	stxx.openDialog="study";
+	// find the associated studyDialog. This may change depending on how you organize your multi-chart layout. For instance
+	// in this sample page we assume a separate studyDialog for each chart but if you have a universal menuing system
+	// then you may just want a single studyDialog. Doesn't matter so long as STXStudies.studyDialog is passed
+	// a dialog that it can grab the inputs and outputs from.
+	var studyDialog=stxx.chart.container.parentNode.parentNode.querySelectorAll("#studyDialog")[0];
+	studyDialog.querySelectorAll(".title")[0].innerHTML=obj.innerHTML;
+	STXStudies.studyDialog(stxx, study, studyDialog);
+}
+
+// Simple menu toggling functionality.
+function toggleMenu(menu){
+	if($$(menu).style.display=="none"){
+		$$(menu).style.display="block";
+		stxx1.openDialog="menu";
+		stxx2.openDialog="menu";
+	}else{
+		$$(menu).style.display="none";
+		stxx1.openDialog="";
+		stxx2.openDialog="";
+	}
+}
+
+// Example of how to use injection to create a floating date on the x-axis
+function prependDoDisplayCrosshairs(){
+	var floatDate=this.chart.container.querySelectorAll("#floatDate")[0];
+	if((this.layout.crosshair || STXChart.vectorType!="") && this.panels["chart"]){
+		if(this.panels["chart"].bottom){
+			floatDate.style.left=(this.backOutX(STXChart.crosshairX)-(floatDate.offsetWidth/2)) + "px";
+			floatDate.style.bottom=(this.chart.canvasHeight-this.panels["chart"].bottom) + "px";
+			floatDate.style.display="block";
+		}else{
+			floatDate.style.display="none";			
+		}
+	}else{
+		floatDate.style.display="none";
+	}
+}
+
+function prependUndisplayCrosshairs(){
+	var floatDate=this.chart.container.querySelectorAll("#floatDate")[0];
+	if(this.displayInitialized){
+		if(this.chart.crossX.style.display==""){
+			floatDate.style.display="none";
+		}
+	}
+}
+
+STXChart.prototype.prepend("doDisplayCrosshairs", prependDoDisplayCrosshairs);
+STXChart.prototype.prepend("undisplayCrosshairs", prependUndisplayCrosshairs);
+
+function prependHeadsUpHR(){
+	var floatDate=this.chart.container.querySelectorAll("#floatDate")[0];
+	var tick=this.tickFromPixel(STXChart.crosshairX-this.chart.left);
+	if(this.layout.interval!="minute") tick/=this.layout.periodicity;
+	var prices=this.chart.dataSet[tick];
+	if(prices!=null){
+		for(var field in prices){
+			if(field=="Date"){
+				floatDate.innerHTML=mmddhhmm(prices[field]);
+			}
+		}
+	}
+}
+
+STXChart.prototype.prepend("headsUpHR", prependHeadsUpHR);
+
+function appendDraw(){
+	var home=this.chart.chartControls.querySelectorAll("#home")[0];
+	if(!home) return;
+	if(this.chart.scroll>this.chart.maxTicks){
+		home.style.display="block";
+	}else{
+		home.style.display="none";
+	}
+}
+
+STXChart.prototype.append("draw", appendDraw);
+
+function main(){
+	testCompatibility();
+	$$("symbol1").onkeyup=(function(stxx){return function(e){symbolKeyUp.call(this, e, stxx);};})(stxx1);
+	$$("symbol2").onkeyup=(function(stxx){return function(e){symbolKeyUp.call(this, e, stxx);};})(stxx2);
+}
+
+function displayChart(){
+	main();
+
+	loadChart(stxx1, "SAMPLE", convertArrayToJson(sampleData.slice(-600)));
+	loadChart(stxx2, "SAMPLE", convertArrayToJson(sampleData.slice(-600)));
+}
+
+//window.onresize=resizeScreen;
+
+</script>
+</body></html>
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+
+
+/* -------------------------------------------------------- NAV BAR -------------------------------------------------------- */
+
+.stx-nav #menus {margin-left:55px;}
+
+/* Comparison */
+.menuSelect.compare {width:220px;}
+.menuSelect.compare input {
+	float:left;
+	width:90px;
+	margin-right:6px;
+	background:#fafafa;
+	text-transform:uppercase;
+	}
+.menuSelect.compare .color {float:left;}
+.menuSelect.compare .btn {float:right;}
+
+
+
+
+/* ------------------------------------------------------- TOOLBAR ------------------------------------------------------- */
+
+/* Magnet */
+.stx-toolbar .btn.magnet span {background-image:url(stx-ui-icons.png);}
+.stx-toolbar .btn.magnet span {
+	display:inline-block;
+	float:left;
+	background-position:-90px 0px;
+	cursor:pointer;
+}
+
+/* Current Measure */
+.stx-toolbar #mMeasure {
+	margin-left:14px; 
+	line-height:27px; 
+	font-size:11px; 
+	color:#999;
+	}
+	
+	
+	
+	
+/* --------------------------------------------------------- MEDIA QUERIES --------------------------------------------------------- */
+
+@media (max-width: 768px) {
+.stx-nav #menus {margin-left:25px;}
+}
+

@@ -1,0 +1,58 @@
+!!!
+html()
+    head
+        meta(charset='utf8')
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        base(href='/')
+        title Forex Payments
+        link(rel='stylesheet', href='/css/app.css')
+        //link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
+        script(src="/js/chartiq/Intl.js")
+        script(src="/js/chartiq/iscroll.js")
+        script(src="/js/chartiq/stxUtilities.js")
+        script(src="/js/chartiq/stxMarket.js")
+        script(src="/js/chartiq/stxI18N.js")
+        script(src="/js/chartiq/stxStudies.js")
+
+    body
+        block body
+            h1 hello world
+            div(id="chartContainer")
+                div(id="chartControls", style="display:none")
+                    div(id="chartSize")
+                        span(id="zoomOut", class="minus") -
+                        span(id="zoomIn",class="plus") -
+                    div(id="home", class="home btn", style="display:none")
+                        span Today
+                div(id="iconsTemplate", class="icons", style="display: none;")
+                    div(id="iconsTitle") Title
+                    div(class="btn icon")
+                        span(class="up") &nbsp;
+                    div(class="btn icon")
+                        span(class="focus") &nbsp;
+                    div(class="btn icon")
+                        span(class="down") &nbsp;
+                    div(class="btn icon")
+                        span(class="close") &nbsp;
+                div(id="handleTemplate", class="handle", style="display: none;")
+                    span Drag
+                div(id="floatDate", class="hd", style="display: none;")
+                div(id="floatVolume", class="hd", style="display: none;")
+                div(id="floatHR", class="vd", style="display: none;")
+                div(id="currentHR", class="vd", style="display: none;")
+                div(id="crossY", class="stx_crosshair", style="display: none;")
+                div(id="crossX", class="stx_crosshair", style="display: none;")
+            script(src="/bower_components/jquery/jquery.min.js")
+            script(src="/js/socket.io-client/dist/socket.io.min.js")
+            script(src="/js/chartiq/stxChart.js")
+            script(charset="ISO-8859-1", src="js/chartiq/stxModulus.js")
+            script(charset="ISO-8859-1", src="js/chartiq/stxKernelOs.js")
+            script(charset="ISO-8859-1", src="js/chartiq/stxUI.js")
+            script(src="/js/frontend.js")
+            script
+                $(document).ready(function(){
+                    loadChart();
+                });
+
+
+

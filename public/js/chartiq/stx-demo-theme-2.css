@@ -1,0 +1,116 @@
+@charset "UTF-8";
+/* CSS Document */
+
+
+/* -------------------------------------------------------- NAV BAR -------------------------------------------------------- */
+
+.stx-nav {border-color:#333;}
+
+
+/* ------------------------------------------------------- TOOLBAR ------------------------------------------------------- */
+
+.stx-toolbar {
+	background:#111111;
+	border-color:#333;
+	}
+.stx-toolbar div.btn {
+	background:#1f1f1f;
+	border: solid 1px #414141;
+	color:#ccc;
+}
+.stx-drawing div.stx-draw-settings {border-left:dotted 1px #414141;}
+.stx-toolbar div.btn:hover {
+	color:#efefef;
+	border: solid 1px #666;
+	}
+.stx-toolbar div.btn:active {
+	color:#fff;
+	}
+.stx-toolbar div.btn.menu > em {border-left:1px dotted #999;}
+.stx-toolbar div.btn.menu:hover > em {border-left:1px dotted #999;}
+
+.stx-drawing .color {border: 5px solid #111111;}
+.stx-drawing span.stx-line {border-top:1px solid #efefef;}
+
+.huLabel {color: #999;}
+.huField {color: #efefef;}
+
+
+/* ------------------------------------------------------- CHART ------------------------------------------------------- */
+
+.stx-chartArea {
+	background:#000000;
+	border-color:#333;
+	}
+
+#iconsTitle {
+	background-color:#7e7e7e;
+	color:white;
+}
+
+/* --------------------------------------------------------- CHART ELEMENT STYLES --------------------------------------------------------- */
+
+.hd, .vd {
+	background-color:#fff;
+	color:#333;
+}
+
+.stx_xaxis {color: #efefef;}
+.stx_xaxis_dark {color: #efefef;}
+.stx_yaxis{color:#efefef;}
+
+.stx_panels {color: white;}
+.stx_panel_background {color:#7c878b;}
+.stx_panel_drag{color:#cccccc;}
+.stx_panel_border{color:#666;}
+
+.stx_crosshair {background-color:rgba(255,255,255,.4);}
+.stx_crosshair_drawing {background-color:rgba(255,255,255,.9);}
+
+.stx_line_chart{color:#fff;}
+
+.stx_highlight_vector{color:red;}
+
+.stx_grid{color:#343434;opacity:.8;}
+.stx_grid_dark{color:#656565;opacity:.8;}
+
+.stx_candle_shadow{color:#ccc;}
+.stx_candle_down{
+	color:#b82c0c;
+	border-color:transparent;	/* if you have more than one css theme and one of them uses candle borders, use transparent here to avoid borders on candles */
+}
+.stx_candle_up{
+	color:#8cc176;
+	border-color:transparent;
+}
+.stx_hollow_candle_down{color:#b82c0c;}
+.stx_hollow_candle_up{color:#8cc176;}
+
+.stx_bar_down{color:#b82c0c;}
+.stx_bar_up{color:#8cc176;}
+
+.stx_volume_up{color:#8cc176;}
+.stx_volume_down{color:#b82c0c;}
+
+.stx_volume_underlay{
+	color:#fff;
+	opacity:.15;
+}
+.stx_projection{color:#fff;}
+.stx_projection_new{color:blue;}
+
+.stx_solo_lit{
+	background-color:#b1b7b8;
+	color:#ffffff;
+}
+.stx_histogram{
+	color:#fff;
+	opacity:.3;
+}
+
+.stx_current_hr_up{background-color:#8cc176; color:#fff;}
+.stx_current_hr_down{background-color:#b82c0c; color:#fff;}
+
+.btn.icon.stx_solo_lit {background:none;}
+
+

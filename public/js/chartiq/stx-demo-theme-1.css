@@ -1,0 +1,115 @@
+@charset "UTF-8";
+/* CSS Document */
+
+
+/* -------------------------------------------------------- NAV BAR -------------------------------------------------------- */
+
+.stx-nav {border-color:#ddd;}
+
+	
+/* ------------------------------------------------------- TOOLBAR ------------------------------------------------------- */
+
+.stx-toolbar {
+	background:#fdfdfd;
+	border-color: #ddd;
+	}
+.stx-toolbar div.btn {
+	background:#fff;
+	border: solid 1px #ddd;
+	color:#7e7e7e;
+}
+.stx-drawing div.stx-draw-settings {border-left:dotted 1px #ddd;}
+.stx-toolbar div.btn:hover {
+	color:#444444;
+	border: solid 1px #c5c5c5;
+	}
+.stx-toolbar div.btn:active {
+	color:#333;
+	}
+.stx-toolbar div.btn.menu > em {border-left:1px dotted #999;}
+.stx-toolbar div.btn.menu:hover > em {border-left:1px dotted #ccc;}
+
+.stx-drawing .color {border: 5px solid #fdfdfd;}
+.stx-drawing span.stx-line {border-top:1px solid #666;}
+
+.huLabel {color: #b2b2b2;}
+.huField {color: #666666;}
+
+
+/* ------------------------------------------------------- CHART ------------------------------------------------------- */
+
+.stx-chartArea {
+	background:#fff;
+	border-color:#ddd;
+	}
+
+#iconsTitle {
+	background-color:#999;
+	color:white;
+}
+
+/* --------------------------------------------------------- CHART ELEMENT STYLES --------------------------------------------------------- */
+
+.hd, .vd {
+	background-color:#333;
+	color:white;
+}
+
+.stx_xaxis {color: #666;}
+.stx_xaxis_dark {color: #444444;}
+.stx_yaxis{color:#333;}
+
+.stx_panels {color: white;}
+.stx_panel_background {color:#7c878b;}
+.stx_panel_drag{color:#666;}
+.stx_panel_border{color:#cccccc;}
+
+.stx_crosshair {background-color:#999;}
+.stx_crosshair_drawing {background-color:#333;}
+
+.stx_line_chart{color:#000000;}
+
+.stx_highlight_vector{color:red;}
+
+.stx_grid{color:#efefef; opacity:1;}
+.stx_grid_dark{color:#cccccc; opacity:.9;}
+
+.stx_candle_shadow{color:#2e383b;}
+.stx_candle_down{
+	color:#b82c0c;
+	border-color:#000000;
+}
+.stx_candle_up{
+	color:#8cc176;
+	border-color:#000000;
+}
+.stx_hollow_candle_down{color:#b82c0c;}
+.stx_hollow_candle_up{color:#8cc176;}
+
+.stx_bar_down{color:#b82c0c;}
+.stx_bar_up{color:#8cc176;}
+
+.stx_volume_up{color:#8cc176;}
+.stx_volume_down{color:#b82c0c;}
+
+.stx_volume_underlay{
+	color:#000000;
+	opacity:.075;
+}
+.stx_projection{color:black;}
+.stx_projection_new{color:blue;}
+
+.stx_solo_lit{
+	background-color:#b1b7b8;
+	color:#ffffff;
+}
+.stx_histogram{
+	color:#000;
+	opacity:.2;
+}
+
+.stx_current_hr_up{background-color:#8cc176;}
+.stx_current_hr_down{background-color:#b82c0c;}
+
+.btn.icon.stx_solo_lit {background:none;}
+

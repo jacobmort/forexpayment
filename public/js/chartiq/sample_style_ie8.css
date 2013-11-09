@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+/* --------------------------------------------------------- COLOR PICKER --------------------------------------------------------- */
+
+.dialog .color span {
+    background: url("stx-icons-arrow-color-sm.png") no-repeat center center #FFFFFF;
+}
+
+
+/* --------------------------------------------------------- CHART CONTROLS --------------------------------------------------------- */
+
+#chartControls {	
+	position:absolute;
+	display:block;
+	bottom:60px;
+	left:0px;
+	height:27px;
+	margin-bottom:4px;
+	width:100%;
+	text-align:center;
+	z-index:1;
+	}
+	
+#chartSize {
+	background-image: url(stx-icons-chart-zoom-sm.png);
+	}
+	
+#chartSize span,
+#chartControls div.more span,
+#chartControls div.home span {
+	background-image: url(stx-icons-chart-control-sm.png);
+}
+
+#chartSize .minus {background-position:0px 0px;}
+#chartSize .minus:active {background-position:0px -27px;}
+
+#chartSize .plus {background-position: -27px 0px;}
+#chartSize .plus:active {background-position: -27px -27px;}
+
+#chartControls div.more span {background-position: -94px 0px;}
+
+#chartControls div.home span {background-position: -54px 0px;}
