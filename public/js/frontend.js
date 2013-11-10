@@ -123,14 +123,16 @@ function loadDayAvg(symbol){
     $.get("/dayHistory?symbol="+convertSymbol, function(response){
         response = $.parseJSON(response);
         avgData.day = response.candles[0].closeMid;
-        $('#dayHist').html(avgData.day);
+        $('#dayHist').html('<span class="avgDay">'+avgData.day+'</span>');
 
     });
 }
 
 function drawAvgLines(avgData){
-    stxx.plotLine(stxx.chart.left, stxx.chart.width, avgData.day, avgData.day, "#138522", "line");//, stxx.chart.context, false, {});
-    stxx.plotLine(stxx.chart.left, stxx.chart.width, avgData.min, avgData.min, "#B38315", "line");//, stxx.chart.context, false, {});
+    var pixelDay = stxx.pixelFromPrice(avgData.day);
+    var pixelMin = stxx.pixelFromPrice(avgData.min);
+    stxx.plotLine(stxx.chart.left, stxx.chart.width, pixelMin, pixelMin, stxx.getCanvasColor("avgMin"), "line");//, stxx.chart.context, false, {});
+    stxx.plotLine(stxx.chart.left, stxx.chart.width, pixelDay, pixelDay, stxx.getCanvasColor("avgDay"), "line");//, stxx.chart.context, false, {});
 }
 
 function loadAvg(symbol){
@@ -138,8 +140,8 @@ function loadAvg(symbol){
     $.get("/minHistory?symbol="+convertSymbol, function(response){
         response = $.parseJSON(response);
         if (response.candles.length === 2){
-            avgData.min = (response.candles[0].closeMid+response.candles[1].closeMid)/2;
-            $('#recentHist').html("5 min average:"+avgData.min);
+            avgData.min = ((response.candles[0].closeMid+response.candles[1].closeMid)/2).toFixed(3);
+            $('#recentHist').html('5 min average: <span class="avgMin">'+avgData.min+'</span>');
         }
     });
 }

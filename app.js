@@ -59,7 +59,7 @@ app.get('/dayHistory', function(req, res){
     });
 });
 app.get('/minHistory', function(req, res){
-    var url="http://api-sandbox.oanda.com/v1/history?instrument="+req.query.symbol+"&count=1&candleFormat=midpoint&granularity=M5";
+    var url="http://api-sandbox.oanda.com/v1/history?instrument="+req.query.symbol+"&count=2&candleFormat=midpoint&granularity=M5";
     request(url, function(error, response, body) {
         res.send(body);
     });
