@@ -59,7 +59,9 @@ function loadInstrument(init, symbol, graph){
 }
 
 function populateInstrument(init, symbol, graph, dataArr){
-    //console.log(JSON.stringify(dataArr));
+    /*if (symbol==='USDJPY'){
+        console.log(JSON.stringify(dataArr));
+    }*/
     symbolDeviation.symbol = calcStats(dataArr);
     if (symbolDeviation.symbol.deviation > .02){ //very low std dev means not active exchange
         if (!withinStd(symbolDeviation.symbol.mean, dataArr[dataArr.length-1].Close, symbolDeviation.symbol.deviation, 2.0)){
@@ -189,13 +191,17 @@ function withinStd(mean, val, stdev, stdDevLimit) {
 
 
 function insertDummy(){
-    var dString = new Date().yyyymmddhhmm();
-
     var data = [{"Open":1.06965,"Date":"201311101032","High":1.06965,"Low":1.06965,"Close":1.06965,"Volume":1},{"Open":1.0701,"Date":"201311101033","High":1.0701,"Low":1.07002,"Close":1.07009,"Volume":5},{"Open":1.07014,"Date":"201311101034","High":1.07014,"Low":1.07014,"Close":1.07014,"Volume":1},{"Open":1.0636,"Date":"201311101035","High":1.0636,"Low":1.0635,"Close":1.0636,"Volume":6},{"Open":1.0639,"Date":"201311101036","High":1.0639,"Low":1.06387,"Close":1.06387,"Volume":2},{"Open":1.06353,"Date":"201311101037","High":1.06353,"Low":1.06353,"Close":1.06353,"Volume":1},{"Open":1.06412,"Date":"201311101038","High":1.06412,"Low":1.06412,"Close":1.06412,"Volume":1},{"Open":1.06455,"Date":"201311101039","High":1.06458,"Low":1.06455,"Close":1.06458,"Volume":2},{"Open":1.06508,"Date":"201311101040","High":1.06519,"Low":1.06508,"Close":1.06519,"Volume":4},{"Open":1.06568,"Date":"201311101041","High":1.06568,"Low":1.06568,"Close":1.06568,"Volume":1},{"Open":1.06571,"Date":"201311101042","High":1.06574,"Low":1.06571,"Close":1.27,"Volume":2}];
     populateInstrument(false, 'EURUSD', true, data);
 }
 
 function insertDummy2(){
-    var data = [{"Open":1.06965,"Date":"201311101032","High":1.06965,"Low":1.06965,"Close":1.06965,"Volume":1},{"Open":1.0701,"Date":"201311101033","High":1.0701,"Low":1.07002,"Close":1.07009,"Volume":5},{"Open":1.07014,"Date":"201311101034","High":1.07014,"Low":1.07014,"Close":1.07014,"Volume":1},{"Open":1.0636,"Date":"201311101035","High":1.0636,"Low":1.0635,"Close":1.0636,"Volume":6},{"Open":1.0639,"Date":"201311101036","High":1.0639,"Low":1.06387,"Close":1.06387,"Volume":2},{"Open":1.06353,"Date":"201311101037","High":1.06353,"Low":1.06353,"Close":1.06353,"Volume":1},{"Open":1.06412,"Date":"201311101038","High":1.06412,"Low":1.06412,"Close":1.06412,"Volume":1},{"Open":1.06455,"Date":"201311101039","High":1.06458,"Low":1.06455,"Close":1.06458,"Volume":2},{"Open":1.06508,"Date":"201311101040","High":1.06519,"Low":1.06508,"Close":1.06519,"Volume":4},{"Open":1.06568,"Date":"201311101041","High":1.06568,"Low":1.06568,"Close":1.06568,"Volume":1},{"Open":1.06571,"Date":"201311101042","High":1.06574,"Low":1.06571,"Close":3.06574,"Volume":2}];
-    populateInstrument(false, 'EURUSD', true, data);
+    var date = new Date();
+    var data = [{"Open":88.327,"Date":dummyTime(date,9),"High":88.327,"Low":88.295,"Close":88.304,"Volume":9},{"Open":88.001,"Date":dummyTime(date,7),"High":88.061,"Low":88.001,"Close":88.061,"Volume":14},{"Open":88.165,"Date":dummyTime(date,6),"High":88.18,"Low":88.165,"Close":88.178,"Volume":6},{"Open":88.588,"Date":dummyTime(date,5),"High":88.594,"Low":88.58,"Close":88.58,"Volume":4},{"Open":88.724,"Date":dummyTime(date,4),"High":88.724,"Low":88.69,"Close":88.696,"Volume":7},{"Open":88.643,"Date":dummyTime(date,3),"High":88.649,"Low":88.497,"Close":88.531,"Volume":14},{"Open":88.581,"Date":dummyTime(date,2),"High":88.581,"Low":88.5,"Close":88.508,"Volume":10},{"Open":88.335,"Date":dummyTime(date,1),"High":88.38,"Low":88.335,"Close":88.373,"Volume":12},{"Open":88.36,"Date":dummyTime(date,0),"High":88.362,"Low":88.339,"Close":89.339,"Volume":8}];
+    populateInstrument(false, 'USDJPY', true, data);
+}
+
+function dummyTime(date, min){
+    var myStartDate = new Date(date - min * 60000);
+    return myStartDate.yyyymmddhhmm();
 }
