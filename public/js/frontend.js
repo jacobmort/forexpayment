@@ -16,7 +16,7 @@ Date.prototype.yyymmddhhmmss = function(){
 //appendMasterData({});
 var stxx=new STXChart();
 stxx.manageTouchAndMouse=true;;
-stxx.setPeriodicityV2(1, 1);
+stxx.setPeriodicityV2(1,1);
 
 function loadChart(data, symbol){
     //var curDate = new Date().yyyymmddhhmm();
@@ -26,6 +26,40 @@ function loadChart(data, symbol){
     stxx.createDataSet();
     stxx.initializeChart($$("chartContainer"));
     stxx.draw();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
+    stxx.zoomIn();
 }
 
 function loadInstrument(init, symbol){
