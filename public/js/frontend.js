@@ -120,7 +120,7 @@ function loadSentiment(symbol){
 
 function loadDayAvg(symbol){
     var convertSymbol = convertSymbolOanda(symbol);
-    $.get("http://localhost:3000/dayHistory?symbol="+convertSymbol, function(response){
+    $.get("/dayHistory?symbol="+convertSymbol, function(response){
         response = $.parseJSON(response);
         avgData.day = response.candles[0].closeMid;
         $('#dayHist').html(avgData.day);
@@ -135,7 +135,7 @@ function drawAvgLines(avgData){
 
 function loadAvg(symbol){
     var convertSymbol = convertSymbolOanda(symbol);
-    $.get("http://localhost:3000/minHistory?symbol="+convertSymbol, function(response){
+    $.get("/minHistory?symbol="+convertSymbol, function(response){
         response = $.parseJSON(response);
         if (response.candles.length === 2){
             avgData.min = (response.candles[0].closeMid+response.candles[1].closeMid)/2;
