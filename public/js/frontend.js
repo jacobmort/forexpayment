@@ -15,22 +15,22 @@ Date.prototype.yyymmddhhmmss = function(){
 
 //appendMasterData({});
 var stxx=new STXChart();
-stxx.manageTouchAndMouse=true;
-stxx.chart.symbol='USD/EUR';
+stxx.manageTouchAndMouse=true;;
 stxx.setPeriodicityV2(1, 1);
 
-function loadChart(data){
+function loadChart(data, symbol){
     //var curDate = new Date().yyyymmddhhmm();
     //var data = [{Open : 1, Date: "201311091514", High: 1, Low: 1, Close: 1, Volume: 1}];
+    stxx.chart.symbol=symbol;
     stxx.setMasterData(data);
     stxx.createDataSet();
     stxx.initializeChart($$("chartContainer"));
     stxx.draw();
 }
-setInterval("loadInstrument(false)", 6000);
-setInterval("loadSentiment", 20000);
-function loadInstrument(init){
-    $.get('http://api-sandbox.oanda.com/v1/history?instrument=EUR_USD&count=20', function(response){
+
+function loadInstrument(init, symbol){
+    var convertSymbol = symbol.substring(0,3)+'_'+symbol.substring(3,6);
+    $.get('http://api-sandbox.oanda.com/v1/history?instrument='+convertSymbol+'&count=20', function(response){
         var data = {};
         $(response.candles).each(function(index, price){
             var curDate = new Date(price.time).yyyymmddhhmm();
@@ -43,7 +43,7 @@ function loadInstrument(init){
         }
         console.log(dataArr);
         if (init){
-            loadChart(dataArr);
+            loadChart(dataArr, symbol);
         }else{
             stxx.appendMasterData(dataArr);
         }
@@ -55,8 +55,8 @@ function diffDays(fromDate, tillDate){
     return Math.ceil(timeDiff / (1000 * 3600 * 24));
 }
 
-function loadSentiment(){
-    $.get("http://localhost:3000/sentiment", function(response){
+function loadSentiment(symbol){
+    $.get("http://localhost:3000/sentiment?symbol="+symbol, function(response){
         console.log(response);
         response = $.parseJSON(response);
         var rollingBear = 0.0;
@@ -97,4 +97,10 @@ function loadSentiment(){
         $('#avgBull').html(avgBull);
         $('#recentBull').html(recentBull[1]+" on "+ recentBull[0]);
     });
+}
+
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
 }

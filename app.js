@@ -48,7 +48,7 @@ app.get('/sentiment', function(req, res){
     console.log('date:'+parseDate(endDate));
     var endDateString = encodeURIComponent(parseDate(endDate));
     var startDateString = encodeURIComponent(parseDate(startDate));
-    var sentimentUrl = 'https://psychsignal.com/api/sentiments?api_key='+psychKey+'&symbol=EURUSD&from='+startDateString+'&to='+endDateString+'&period=5&format=json&callback=fillSentiment';
+    var sentimentUrl = 'https://psychsignal.com/api/sentiments?api_key='+psychKey+'&symbol='+req.query.symbol+'&from='+startDateString+'&to='+endDateString+'&period=5&format=json&callback=fillSentiment';
     console.log(sentimentUrl);
     request(sentimentUrl, function(error, response, body) {
         res.send(body);

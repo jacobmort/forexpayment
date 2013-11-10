@@ -16,7 +16,13 @@ html()
 
     body
         block body
-            h1 USD/EUR ratio
+            ul(id="tabs", class="nav nav-tabs")
+                li(class="active EURUSD")
+                    a(href="/?ticker=EURUSD") EUR/USD
+                li(class="USDJPY")
+                    a(href="/?ticker=USDJPY") USD/JPY
+                li
+                    a(href="#") USD something
             table(class="table table-striped table-condensed")
                 th Sentiment
                 th Most Recent
@@ -64,9 +70,19 @@ html()
             script(src="/js/frontend.js")
             script
                 $(document).ready(function(){
-                    loadInstrument(true);
-                    loadSentiment();
+                    var symbol = getURLParameter('ticker');
+                    if (symbol === "null"){
+                        symbol = 'EURUSD';
+                    }
+                    $('.active').removeClass('active');
+                    $('#tabs .'+symbol).addClass('active');
+                    loadInstrument(true, symbol);
+                    loadSentiment(symbol);
+                    setInterval("loadInstrument(false, symbol)", 6000);
+                    setInterval("loadSentiment", 20000);
+
                 });
+
 
 
 
