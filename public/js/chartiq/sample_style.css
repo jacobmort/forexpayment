@@ -225,16 +225,16 @@ div.menuSelect div.col:last-child {margin-right:0px;}
 	border:1px #cbd5d8 solid;
 	text-indent:100px;
 }
-.btn span.up {background: url(stx-icons-chart-panels.png) -65px -5px #fff;}
-.btn:active span.up {background:url(stx-icons-chart-panels.png) -65px -35px #778083;}
-.btn span.down {background:url(stx-icons-chart-panels.png) -35px -5px #fff;}
-.btn:active span.down {background:url(stx-icons-chart-panels.png) -35px -35px #778083;}
-.btn span.focus {background:url(stx-icons-chart-panels.png) -5px -5px #fff;}
-.btn:active span.focus {background:url(stx-icons-chart-panels.png) -5px -35px #778083;}
-.btn span.close {background:url(stx-icons-chart-panels.png) -95px -5px #fff;}
-.btn:active span.close {background:url(stx-icons-chart-panels.png) -95px -35px #778083;}
-.btn span.trash {background:url(stx-icons-chart-panels.png) -205px -5px #fff;}
-.btn:active span.trash {background:url(stx-icons-chart-panels.png) -205px -35px #778083;}
+.btn span.up {background: url(../../css/stx-icons-chart-panels.png) -65px -5px #fff;}
+.btn:active span.up {background:url(../../css/stx-icons-chart-panels.png) -65px -35px #778083;}
+.btn span.down {background:url(../../css/stx-icons-chart-panels.png) -35px -5px #fff;}
+.btn:active span.down {background:url(../../css/stx-icons-chart-panels.png) -35px -35px #778083;}
+.btn span.focus {background:url(../../css/stx-icons-chart-panels.png) -5px -5px #fff;}
+.btn:active span.focus {background:url(../../css/stx-icons-chart-panels.png) -5px -35px #778083;}
+.btn span.close {background:url(../../css/stx-icons-chart-panels.png) -95px -5px #fff;}
+.btn:active span.close {background:url(../../css/stx-icons-chart-panels.png) -95px -35px #778083;}
+.btn span.trash {background:url(../../css/stx-icons-chart-panels.png) -205px -5px #fff;}
+.btn:active span.trash {background:url(../../css/stx-icons-chart-panels.png) -205px -35px #778083;}
 
 .btn.stx_solo_lit {
 	height:27px;
@@ -408,7 +408,7 @@ div.menuSelect div.col:last-child {margin-right:0px;}
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	background-image:url(stx-icons-arrow-color.png);
+	background-image:url(../../css/stx-icons-arrow-color.png);
 	background-position: center;
 	background-size: 7px 7px;
 	background-repeat:no-repeat;
@@ -559,7 +559,7 @@ div.menuSelect div.col:last-child {margin-right:0px;}
 	margin:0px auto;
 	width:37px;
 	height:27px;
-	background:url(stx-icons-chart-panels.png) no-repeat -125px 0px;
+	background:url(../../css/stx-icons-chart-panels.png) no-repeat -125px 0px;
 	padding-top:27px;
 }
 .handle:active {cursor: url(http://cur-google.com/mail/images/2/closedhand.cur), default !important;}
@@ -617,7 +617,7 @@ div.menuSelect div.col:last-child {margin-right:0px;}
 	margin:0px auto;
 	width:110px;
 	height:27px;
-	background-image: url(stx-icons-chart-zoom.png);
+	background-image: url(../../css/stx-icons-chart-zoom.png);
 	background-repeat: no-repeat;
 	background-size: 50px 27px;
 	background-position:center;
@@ -628,7 +628,7 @@ div.menuSelect div.col:last-child {margin-right:0px;}
 #chartSize span,
 #chartControls div.more span,
 #chartControls div.home span {
-	background-image: url(stx-icons-chart-control.png);
+	background-image: url(../../css/stx-icons-chart-control.png);
 	background-size: 150px 54px;
 	background-position:0px 0px;
 	background-repeat:no-repeat;

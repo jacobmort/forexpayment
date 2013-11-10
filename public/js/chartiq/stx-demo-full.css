@@ -24,7 +24,7 @@
 /* ------------------------------------------------------- TOOLBAR ------------------------------------------------------- */
 
 /* Magnet */
-.stx-toolbar .btn.magnet span {background-image:url(stx-ui-icons.png);}
+.stx-toolbar .btn.magnet span {background-image:url(../../css/stx-ui-icons.png);}
 .stx-toolbar .btn.magnet span {
 	display:inline-block;
 	float:left;

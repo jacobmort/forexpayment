@@ -121,7 +121,7 @@ select:focus {
 	line-height:27px; 
 	height:27px;
 	width:16px;
-	background-image: url(stx-ui-icons.png);
+	background-image: url(../../css/stx-ui-icons.png);
 	background-position:3px 0px;
 	border-left:1px dotted #999;
 	opacity:.4;
@@ -182,7 +182,7 @@ select:focus {
 .btn.icon:hover > span,
 .btn.icon:active > span {
 	background-color:#999;
-	background-image: url(stx-chart-icons.png);
+	background-image: url(../../css/stx-chart-icons.png);
 	background-repeat:no-repeat;
 	background-color:rgba(153,153,153,.3);
 	border:1px solid transparent;
@@ -219,7 +219,7 @@ select:focus {
 
 .dialog .btn.close > span.close,
 .menuSelect .btn.icon > span.close {
-	background-image: url(stx-ui-icons.png);
+	background-image: url(../../css/stx-ui-icons.png);
 	background-color:#fff;
 	background-position: -125px -4px;
 	border-color:#ddd;
@@ -261,7 +261,7 @@ select:focus {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	background-image: url(stx-ui-icons.png);
+	background-image: url(../../css/stx-ui-icons.png);
 	background-position:0px -8px;
 }
 
@@ -312,7 +312,7 @@ select:focus {
 .stx-nav {
 	position:relative;
 	border:solid 1px #ddd;
-	background:url(stx-BG-topbar.png)
+	background:url(../../css/stx-BG-topbar.png)
 	}
 .stx-nav #search,
 .stx-nav #options,
@@ -382,7 +382,7 @@ input#symbol {
 
 .stx-nav .btn.nav-icon#shareBtn,
 .stx-nav .btn.menu#cogBtn {
-	background-image:url(stx-ui-icons.png);
+	background-image:url(../../css/stx-ui-icons.png);
 	width:27px;
 	}
 .stx-nav .btn.menu#cogBtn {
@@ -490,7 +490,7 @@ li.stxLookupFilter {
 	height:14px;
 	text-indent:-1000px;
 	overflow:hidden;
-	background-image:url(stx-ui-icons.png); 
+	background-image:url(../../css/stx-ui-icons.png);
 	background-position:-156px -6px;
 }
 .menuSelect li.stx-option .stx-checkbox.true {background-position:-186px -6px;}
@@ -995,7 +995,7 @@ ul.hu li {
 #chartSize span,
 #chartControls div.more span,
 #chartControls div.home span {
-	background-image: url(stx-chart-icons.png);
+	background-image: url(../../css/stx-chart-icons.png);
 	background-repeat:no-repeat;
 	display:inline-block;
 	line-height:22px;
@@ -1169,7 +1169,7 @@ ul.hu li {
 	margin:0px auto;
 	width:30px;
 	height:27px;
-	background:url(stx-chart-icons.png) no-repeat -300px 0px;
+	background:url(../../css/stx-chart-icons.png) no-repeat -300px 0px;
 	padding-top:27px;
 }
 .handle:active {cursor: url(http://cur-google.com/mail/images/2/closedhand.cur), default !important;}

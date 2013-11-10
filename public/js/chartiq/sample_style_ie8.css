@@ -3,7 +3,7 @@
 /* --------------------------------------------------------- COLOR PICKER --------------------------------------------------------- */
 
 .dialog .color span {
-    background: url("stx-icons-arrow-color-sm.png") no-repeat center center #FFFFFF;
+    background: url("../../css/stx-icons-arrow-color-sm.png") no-repeat center center #FFFFFF;
 }
 
 
@@ -22,13 +22,13 @@
 	}
 	
 #chartSize {
-	background-image: url(stx-icons-chart-zoom-sm.png);
+	background-image: url(../../css/stx-icons-chart-zoom-sm.png);
 	}
 	
 #chartSize span,
 #chartControls div.more span,
 #chartControls div.home span {
-	background-image: url(stx-icons-chart-control-sm.png);
+	background-image: url(../../css/stx-icons-chart-control-sm.png);
 }
 
 #chartSize .minus {background-position:0px 0px;}
@@ -39,4 +39,4 @@
 
 #chartControls div.more span {background-position: -94px 0px;}
 
-#chartControls div.home span {background-position: -54px 0px;}
+#chartControls div.home span {background-position: -54px 0px;}

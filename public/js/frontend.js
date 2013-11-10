@@ -84,8 +84,17 @@ function loadSentiment(symbol){
         });
         var avgBear = rollingBear/bears;
         var avgBull = rollingBull/bulls;
-        recentBear = response.bearish[response.bearish.length-1];
-        recentBull = response.bullish[response.bullish.length-1];
+        var recentBearString = "No Data";
+        if (response.bearish.length > 0){
+            recentBear = response.bearish[response.bearish.length-1];
+            recentBearString = recentBear[1]+" on "+ recentBear[0];
+        }
+        var recentBullString = "No Data";
+        if (response.bullish.length > 0){
+            recentBull = response.bullish[response.bullish.length-1];
+            recentBullString = recentBull[1]+" on "+ recentBull[0];
+        }
+
         if (isNaN(avgBear) || avgBear===Infinity){
             avgBear = "No data";
         }
@@ -93,9 +102,9 @@ function loadSentiment(symbol){
             avgBull = "No data";
         }
         $('#avgBear').html(avgBear);
-        $('#recentBear').html(recentBear[1]+" on "+ recentBear[0]);
+        $('#recentBear').html(recentBearString);
         $('#avgBull').html(avgBull);
-        $('#recentBull').html(recentBull[1]+" on "+ recentBull[0]);
+        $('#recentBull').html(recentBullString);
     });
 }
 

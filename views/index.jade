@@ -17,12 +17,49 @@ html()
     body
         block body
             ul(id="tabs", class="nav nav-tabs")
-                li(class="active EURUSD")
+                li(class="EURUSD")
                     a(href="/?ticker=EURUSD") EUR/USD
                 li(class="USDJPY")
                     a(href="/?ticker=USDJPY") USD/JPY
-                li
-                    a(href="#") USD something
+                li(class="USDCAD")
+                    a(href="/?ticker=USDCAD") USD/CAD
+                li(class="GBPUSD")
+                    a(href="/?ticker=GBPUSD") GBP/USD
+                li(class="AUDUSD")
+                    a(href="/?ticker=AUDUSD") AUD/USD
+                li(class="NZDUSD")
+                    a(href="/?ticker=NZDUSD") NZD/USD
+                li(class="USDCNY")
+                    a(href="/?ticker=USDCNY") USD/CNY
+                li(class="USDINR")
+                    a(href="/?ticker=USDINR") USD/INR
+                li(class="USDMXN")
+                    a(href="/?ticker=USDMXN") USD/MXN
+                li(class="USDCHF")
+                    a(href="/?ticker=USDCHF") USD/CHF
+                li(class="USDPLN")
+                    a(href="/?ticker=USDPLN") USD/PLN
+                li(class="USDNOK")
+                    a(href="/?ticker=USDNOK") USD/NOK
+                li(class="USDDKK")
+                    a(href="/?ticker=USDDKK") USD/DKK
+                li(class="USDHUF")
+                    a(href="/?ticker=USDHUF") USD/HUF
+                li(class="USDSAR")
+                    a(href="/?ticker=USDSAR") USD/SAR
+                li(class="USDSEK")
+                    a(href="/?ticker=USDSEK") USD/SEK
+                li(class="USDSGD")
+                    a(href="/?ticker=USDSGD") USD/SGD
+                li(class="USDTHB")
+                    a(href="/?ticker=USDTHB") USD/THB
+                li(class="USDTRY")
+                    a(href="/?ticker=USDTRY") USD/TRY
+                li(class="USDTWD")
+                    a(href="/?ticker=USDTWD") USD/TWD
+
+                li(class="USDZAR")
+                    a(href="/?ticker=USDZAR") USDZAR
             table(class="table table-striped table-condensed")
                 th Sentiment
                 th Most Recent
@@ -78,8 +115,8 @@ html()
                     $('#tabs .'+symbol).addClass('active');
                     loadInstrument(true, symbol);
                     loadSentiment(symbol);
-                    setInterval("loadInstrument(false, symbol)", 6000);
-                    setInterval("loadSentiment", 20000);
+                    setInterval(function(){loadInstrument(false, symbol)}, 6000);
+                    setInterval(function(){loadSentiment(symbol)}, 20000);
 
                 });
 
