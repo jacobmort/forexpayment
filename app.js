@@ -45,12 +45,22 @@ function parseDate(date){
 app.get('/sentiment', function(req, res){
     var endDate = new Date();
     var startDate = new Date(endDate - 2880 * 60000);
-    console.log('date:'+parseDate(endDate));
     var endDateString = encodeURIComponent(parseDate(endDate));
     var startDateString = encodeURIComponent(parseDate(startDate));
     var sentimentUrl = 'https://psychsignal.com/api/sentiments?api_key='+psychKey+'&symbol='+req.query.symbol+'&from='+startDateString+'&to='+endDateString+'&period=5&format=json&callback=fillSentiment';
-    console.log(sentimentUrl);
     request(sentimentUrl, function(error, response, body) {
+        res.send(body);
+    });
+});
+app.get('/dayHistory', function(req, res){
+    var url="http://api-sandbox.oanda.com/v1/history?instrument="+req.query.symbol+"&count=1&candleFormat=midpoint&granularity=D";
+    request(url, function(error, response, body) {
+        res.send(body);
+    });
+});
+app.get('/minHistory', function(req, res){
+    var url="http://api-sandbox.oanda.com/v1/history?instrument="+req.query.symbol+"&count=1&candleFormat=midpoint&granularity=M5";
+    request(url, function(error, response, body) {
         res.send(body);
     });
 });

@@ -63,17 +63,21 @@ html()
                         a(href="/?ticker=USDZAR") USDZAR
                 table(class="table table-striped table-condensed table-hover")
                     tr
-                        th Sentiment
+                        th
                         th Most Recent
-                        th rolling 24hr average
+                        th 24hr average
                     tr
-                        td Bullish
+                        td Bullish Sentiment
                         td(id="recentBull")
                         td(id="avgBull")
                     tr
-                        td Bearish
+                        td Bearish Sentiment
                         td(id="recentBear")
                         td(id="avgBear")
+                    tr
+                        td Historical Average
+                        td(id="recentHist")
+                        td(id="dayHist")
 
                 div(id="chartContainer")
                     div(id="chartControls", style="display:none")
@@ -117,8 +121,11 @@ html()
                     $('#tabs .'+symbol).addClass('active');
                     loadInstrument(true, symbol);
                     loadSentiment(symbol);
+                    loadDayAvg(symbol);
+                    loadAvg(symbol);
                     setInterval(function(){loadInstrument(false, symbol)}, 6000);
                     setInterval(function(){loadSentiment(symbol)}, 20000);
+                    setInterval(function(){loadAvg(symbol)}, 50000);
 
                 });
 

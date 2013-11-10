@@ -18,6 +18,8 @@ var stxx=new STXChart();
 stxx.manageTouchAndMouse=true;;
 stxx.setPeriodicityV2(1,1);
 
+var avgData = {}; //ugly global hack
+
 function loadChart(data, symbol){
     //var curDate = new Date().yyyymmddhhmm();
     //var data = [{Open : 1, Date: "201311091514", High: 1, Low: 1, Close: 1, Volume: 1}];
@@ -26,50 +28,23 @@ function loadChart(data, symbol){
     stxx.createDataSet();
     stxx.initializeChart($$("chartContainer"));
     stxx.draw();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
-    stxx.zoomIn();
+    for (var i=0; i<33; ++i){
+        stxx.zoomIn();
+    }
+
+}
+
+function convertSymbolOanda(symbol){
+    return symbol.substring(0,3)+'_'+symbol.substring(3,6);
 }
 
 function loadInstrument(init, symbol){
-    var convertSymbol = symbol.substring(0,3)+'_'+symbol.substring(3,6);
+    var convertSymbol = convertSymbolOanda(symbol);
     $.get('http://api-sandbox.oanda.com/v1/history?instrument='+convertSymbol+'&count=20', function(response){
         var data = {};
         $(response.candles).each(function(index, price){
             var curDate = new Date(price.time).yyyymmddhhmm();
             data[curDate] = {Open : price.openBid, Date : curDate, High: price.highBid, Low: price.lowBid, Close: price.closeBid, Volume: price.volume};
-            //data.push({Open : price.openBid, Date : curDate, High: price.highBid, Low: price.lowBid, Close: price.closeBid, Volume: price.volume});
         });
         var dataArr = [];
         for(var date in data) {
@@ -81,6 +56,7 @@ function loadInstrument(init, symbol){
         }else{
             stxx.appendMasterData(dataArr);
         }
+        drawAvgLines(avgData);
     });
 }
 
@@ -116,17 +92,17 @@ function loadSentiment(symbol){
                 bears += 1;
             }
         });
-        var avgBear = rollingBear/bears;
-        var avgBull = rollingBull/bulls;
+        var avgBear = 100*rollingBear/(bears*4);
+        var avgBull = 100*rollingBull/(bulls*4);
         var recentBearString = "No Data";
         if (response.bearish.length > 0){
             recentBear = response.bearish[response.bearish.length-1];
-            recentBearString = recentBear[1]+" on "+ recentBear[0];
+            recentBearString = 100*recentBear[1]/4+"% on "+ recentBear[0];
         }
         var recentBullString = "No Data";
         if (response.bullish.length > 0){
             recentBull = response.bullish[response.bullish.length-1];
-            recentBullString = recentBull[1]+" on "+ recentBull[0];
+            recentBullString = 100*recentBull[1]/4+"% on "+ recentBull[0];
         }
 
         if (isNaN(avgBear) || avgBear===Infinity){
@@ -139,6 +115,32 @@ function loadSentiment(symbol){
         $('#recentBear').html(recentBearString);
         $('#avgBull').html(avgBull);
         $('#recentBull').html(recentBullString);
+    });
+}
+
+function loadDayAvg(symbol){
+    var convertSymbol = convertSymbolOanda(symbol);
+    $.get("http://localhost:3000/dayHistory?symbol="+convertSymbol, function(response){
+        response = $.parseJSON(response);
+        avgData.day = response.candles[0].closeMid;
+        $('#dayHist').html(avgData.day);
+
+    });
+}
+
+function drawAvgLines(avgData){
+    stxx.plotLine(stxx.chart.left, stxx.chart.width, avgData.day, avgData.day, "#138522", "line");//, stxx.chart.context, false, {});
+    stxx.plotLine(stxx.chart.left, stxx.chart.width, avgData.min, avgData.min, "#B38315", "line");//, stxx.chart.context, false, {});
+}
+
+function loadAvg(symbol){
+    var convertSymbol = convertSymbolOanda(symbol);
+    $.get("http://localhost:3000/minHistory?symbol="+convertSymbol, function(response){
+        response = $.parseJSON(response);
+        if (response.candles.length === 2){
+            avgData.min = (response.candles[0].closeMid+response.candles[1].closeMid)/2;
+            $('#recentHist').html("5 min average:"+avgData.min);
+        }
     });
 }
 
