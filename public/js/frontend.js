@@ -18,11 +18,11 @@ var stxx=new STXChart();
 stxx.manageTouchAndMouse=true;;
 stxx.setPeriodicityV2(1,1);
 
-var avgData = {}; //ugly global hack
+//ugly globals hack
+var avgData = {};
+var symbolDeviation = {};
 
 function loadChart(data, symbol){
-    //var curDate = new Date().yyyymmddhhmm();
-    //var data = [{Open : 1, Date: "201311091514", High: 1, Low: 1, Close: 1, Volume: 1}];
     stxx.chart.symbol=symbol;
     stxx.setMasterData(data);
     stxx.createDataSet();
@@ -37,10 +37,14 @@ function loadChart(data, symbol){
 function convertSymbolOanda(symbol){
     return symbol.substring(0,3)+'_'+symbol.substring(3,6);
 }
-
-function loadInstrument(init, symbol){
+function updateInstruments(symbol){
+    $('#tabs li').not('li.'+symbol).each(function(index, ele){
+        loadInstrument(false, $(ele).attr('class').split(" ")[0], false);
+    });
+}
+function loadInstrument(init, symbol, graph){
     var convertSymbol = convertSymbolOanda(symbol);
-    $.get('http://api-sandbox.oanda.com/v1/history?instrument='+convertSymbol+'&count=20', function(response){
+    $.get('http://api-sandbox.oanda.com/v1/history?instrument='+convertSymbol+'&count=100', function(response){
         var data = {};
         $(response.candles).each(function(index, price){
             var curDate = new Date(price.time).yyyymmddhhmm();
@@ -50,13 +54,23 @@ function loadInstrument(init, symbol){
         for(var date in data) {
             dataArr.push(data[date]);
         }
-        console.log(dataArr);
-        if (init){
-            loadChart(dataArr, symbol);
+        symbolDeviation.symbol = calcStats(dataArr);
+        console.log("symbol:"+symbol+" mean:"+symbolDeviation.symbol.mean+" close:"+dataArr[dataArr.length-1].Close+" std dev:"+symbolDeviation.symbol.deviation);
+        if (!withinStd(symbolDeviation.symbol.mean, dataArr[dataArr.length-1].Close, symbolDeviation.symbol.deviation, 1.5)){
+            $('li.'+symbol).addClass('label-warning');
+        }else if (!withinStd(symbolDeviation.symbol.mean, dataArr[dataArr.length-1].Close, symbolDeviation.symbol.deviation, 2.0)){
+            $('li.'+symbol).addClass('label-danger');
         }else{
-            stxx.appendMasterData(dataArr);
+            $('li.'+symbol).removeClass('label-danger').removeClass('label-warning');
         }
-        drawAvgLines(avgData);
+        if (graph){
+            if (init){
+                loadChart(dataArr, symbol);
+            }else{
+                stxx.appendMasterData(dataArr);
+            }
+            drawAvgLines(avgData);
+        }
     });
 }
 
@@ -67,7 +81,6 @@ function diffDays(fromDate, tillDate){
 
 function loadSentiment(symbol){
     $.get("/sentiment?symbol="+symbol, function(response){
-        console.log(response);
         response = $.parseJSON(response);
         var rollingBear = 0.0;
         var bears = 0;
@@ -150,4 +163,17 @@ function getURLParameter(name) {
     return decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
     );
+}
+
+function calcStats(data) {
+    var r = {mean: 0, variance: 0, deviation: 0}, t = data.length;
+    for(var m, s = 0, l = t; l--; s += data[l].Close);
+    for(m = r.mean = s / t, l = t, s = 0; l--; s += Math.pow(data[l].Close - m, 2));
+    return r.deviation = Math.sqrt(r.variance = s / t), r;
+}
+
+function withinStd(mean, val, stdev, stdDevLimit) {
+    var low = mean-(stdDevLimit*stdev);
+    var hi = mean+(stdDevLimit*stdev);
+    return (val > low) && (val < hi);
 }

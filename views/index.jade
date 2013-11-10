@@ -16,8 +16,8 @@ html()
 
     body
         block body
-            div(class="col-xs-16")
-                ul(id="tabs", class="nav nav-tabs")
+            div(class="col-xs-12")
+                ul(id="tabs", class="nav nav-pills")
                     li(class="EURUSD")
                         a(href="/?ticker=EURUSD") EUR/USD
                     li(class="USDJPY")
@@ -65,7 +65,7 @@ html()
                     tr
                         th
                         th Most Recent
-                        th 24hr average
+                        th Day average
                     tr
                         td Bullish Sentiment
                         td(id="recentBull")
@@ -119,12 +119,14 @@ html()
                     }
                     $('.active').removeClass('active');
                     $('#tabs .'+symbol).addClass('active');
-                    loadInstrument(true, symbol);
-                    loadSentiment(symbol);
+                    loadInstrument(true, symbol, true);
+                    loadSentiment(symbol, true);
                     loadDayAvg(symbol);
                     loadAvg(symbol);
-                    setInterval(function(){loadInstrument(false, symbol)}, 6000);
-                    setInterval(function(){loadSentiment(symbol)}, 20000);
+                    updateInstruments(symbol);
+                    setInterval(function(){loadInstrument(false, symbol, true)}, 6000);
+                    setInterval(function(){updateInstruments(symbol)}, 6000);
+                    setInterval(function(){loadSentiment(symbol, true)}, 20000);
                     setInterval(function(){loadAvg(symbol)}, 50000);
 
                 });

@@ -8,6 +8,16 @@
     color:#138522
 }
 
+#tabs .label-warning a,
+#tabs .label-warning a:hover {
+    background-color: orange;
+}
+
+#tabs .label-danger a,
+#tabs .label-danger a:hover {
+    background-color: red;
+}
+
 /* --------------------------------------------------------- GENERAL STYLES --------------------------------------------------------- */
 
 textarea, input {
