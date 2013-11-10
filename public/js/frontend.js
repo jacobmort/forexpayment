@@ -54,24 +54,32 @@ function loadInstrument(init, symbol, graph){
         for(var date in data) {
             dataArr.push(data[date]);
         }
-        symbolDeviation.symbol = calcStats(dataArr);
-        console.log("symbol:"+symbol+" mean:"+symbolDeviation.symbol.mean+" close:"+dataArr[dataArr.length-1].Close+" std dev:"+symbolDeviation.symbol.deviation);
-        if (!withinStd(symbolDeviation.symbol.mean, dataArr[dataArr.length-1].Close, symbolDeviation.symbol.deviation, 1.5)){
-            $('li.'+symbol).addClass('label-warning');
-        }else if (!withinStd(symbolDeviation.symbol.mean, dataArr[dataArr.length-1].Close, symbolDeviation.symbol.deviation, 2.0)){
+        populateInstrument(init, symbol, graph, dataArr);
+    });
+}
+
+function populateInstrument(init, symbol, graph, dataArr){
+    //console.log(JSON.stringify(dataArr));
+    symbolDeviation.symbol = calcStats(dataArr);
+    if (symbolDeviation.symbol.deviation > .02){ //very low std dev means not active exchange
+        if (!withinStd(symbolDeviation.symbol.mean, dataArr[dataArr.length-1].Close, symbolDeviation.symbol.deviation, 2.0)){
+            console.log("symbol:"+symbol+" mean:"+symbolDeviation.symbol.mean+" close:"+dataArr[dataArr.length-1].Close+" std dev:"+symbolDeviation.symbol.deviation);
             $('li.'+symbol).addClass('label-danger');
+        }else if (!withinStd(symbolDeviation.symbol.mean, dataArr[dataArr.length-1].Close, symbolDeviation.symbol.deviation, 1.5)){
+            console.log("symbol:"+symbol+" mean:"+symbolDeviation.symbol.mean+" close:"+dataArr[dataArr.length-1].Close+" std dev:"+symbolDeviation.symbol.deviation);
+            $('li.'+symbol).addClass('label-warning');
         }else{
             $('li.'+symbol).removeClass('label-danger').removeClass('label-warning');
         }
-        if (graph){
-            if (init){
-                loadChart(dataArr, symbol);
-            }else{
-                stxx.appendMasterData(dataArr);
-            }
-            drawAvgLines(avgData);
+    }
+    if (graph){
+        if (init){
+            loadChart(dataArr, symbol);
+        }else{
+            stxx.appendMasterData(dataArr);
         }
-    });
+        drawAvgLines(avgData);
+    }
 }
 
 function diffDays(fromDate, tillDate){
@@ -176,4 +184,18 @@ function withinStd(mean, val, stdev, stdDevLimit) {
     var low = mean-(stdDevLimit*stdev);
     var hi = mean+(stdDevLimit*stdev);
     return (val > low) && (val < hi);
+}
+
+
+
+function insertDummy(){
+    var dString = new Date().yyyymmddhhmm();
+
+    var data = [{"Open":1.06965,"Date":"201311101032","High":1.06965,"Low":1.06965,"Close":1.06965,"Volume":1},{"Open":1.0701,"Date":"201311101033","High":1.0701,"Low":1.07002,"Close":1.07009,"Volume":5},{"Open":1.07014,"Date":"201311101034","High":1.07014,"Low":1.07014,"Close":1.07014,"Volume":1},{"Open":1.0636,"Date":"201311101035","High":1.0636,"Low":1.0635,"Close":1.0636,"Volume":6},{"Open":1.0639,"Date":"201311101036","High":1.0639,"Low":1.06387,"Close":1.06387,"Volume":2},{"Open":1.06353,"Date":"201311101037","High":1.06353,"Low":1.06353,"Close":1.06353,"Volume":1},{"Open":1.06412,"Date":"201311101038","High":1.06412,"Low":1.06412,"Close":1.06412,"Volume":1},{"Open":1.06455,"Date":"201311101039","High":1.06458,"Low":1.06455,"Close":1.06458,"Volume":2},{"Open":1.06508,"Date":"201311101040","High":1.06519,"Low":1.06508,"Close":1.06519,"Volume":4},{"Open":1.06568,"Date":"201311101041","High":1.06568,"Low":1.06568,"Close":1.06568,"Volume":1},{"Open":1.06571,"Date":"201311101042","High":1.06574,"Low":1.06571,"Close":1.27,"Volume":2}];
+    populateInstrument(false, 'EURUSD', true, data);
+}
+
+function insertDummy2(){
+    var data = [{"Open":1.06965,"Date":"201311101032","High":1.06965,"Low":1.06965,"Close":1.06965,"Volume":1},{"Open":1.0701,"Date":"201311101033","High":1.0701,"Low":1.07002,"Close":1.07009,"Volume":5},{"Open":1.07014,"Date":"201311101034","High":1.07014,"Low":1.07014,"Close":1.07014,"Volume":1},{"Open":1.0636,"Date":"201311101035","High":1.0636,"Low":1.0635,"Close":1.0636,"Volume":6},{"Open":1.0639,"Date":"201311101036","High":1.0639,"Low":1.06387,"Close":1.06387,"Volume":2},{"Open":1.06353,"Date":"201311101037","High":1.06353,"Low":1.06353,"Close":1.06353,"Volume":1},{"Open":1.06412,"Date":"201311101038","High":1.06412,"Low":1.06412,"Close":1.06412,"Volume":1},{"Open":1.06455,"Date":"201311101039","High":1.06458,"Low":1.06455,"Close":1.06458,"Volume":2},{"Open":1.06508,"Date":"201311101040","High":1.06519,"Low":1.06508,"Close":1.06519,"Volume":4},{"Open":1.06568,"Date":"201311101041","High":1.06568,"Low":1.06568,"Close":1.06568,"Volume":1},{"Open":1.06571,"Date":"201311101042","High":1.06574,"Low":1.06571,"Close":3.06574,"Volume":2}];
+    populateInstrument(false, 'EURUSD', true, data);
 }
