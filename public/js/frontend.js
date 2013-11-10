@@ -66,7 +66,7 @@ function diffDays(fromDate, tillDate){
 }
 
 function loadSentiment(symbol){
-    $.get("http://localhost:3000/sentiment?symbol="+symbol, function(response){
+    $.get("/sentiment?symbol="+symbol, function(response){
         console.log(response);
         response = $.parseJSON(response);
         var rollingBear = 0.0;
