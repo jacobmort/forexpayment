@@ -6,7 +6,7 @@ html()
         base(href='/')
         title Forex Payments
         link(rel='stylesheet', href='/css/app.css')
-        //link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
+        link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
         script(src="/js/chartiq/Intl.js")
         script(src="/js/chartiq/iscroll.js")
         script(src="/js/chartiq/stxUtilities.js")
@@ -16,7 +16,20 @@ html()
 
     body
         block body
-            h1 hello world
+            h1 USD/EUR ratio
+            table(class="table table-striped table-condensed")
+                th Sentiment
+                th Most Recent
+                th rolling 24hr average
+                tr
+                    td Bullish
+                    td(id="recentBull")
+                    td(id="avgBull")
+                tr
+                    td Bearish
+                    td(id="recentBear")
+                    td(id="avgBear")
+
             div(id="chartContainer")
                 div(id="chartControls", style="display:none")
                     div(id="chartSize")
@@ -51,7 +64,8 @@ html()
             script(src="/js/frontend.js")
             script
                 $(document).ready(function(){
-                    loadChart();
+                    loadInstrument(true);
+                    loadSentiment();
                 });
 
 

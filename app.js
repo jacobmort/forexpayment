@@ -5,6 +5,8 @@ var express = require('express'),
 var app = module.exports = express();
 var server = require('http').createServer(app);
 var request = require("request");
+
+
 /**
  * Configuration
  */
@@ -17,6 +19,7 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(app.router);
+var psychKey = "ca0fd572e64d71e2149381fa13fee347";
 // development only
 if (app.get('env') === 'development') {
   app.use(express.errorHandler());
@@ -26,9 +29,32 @@ if (app.get('env') === 'development') {
 if (app.get('env') === 'production') {
 
 }
+
+function parseDate(date){
+    //YYYY-MM-DD HH:MM:SS
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = date.getDate().toString();
+    var hour = date.getHours().toString();
+    var min = date.getMinutes().toString();
+    return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +"-"+ (dd[1]?dd:"0"+dd[0]) + " "+(hour[1]?hour:"0"+hour[0]) +":"+ (min[1]?min:"0"+min[0])+":00"; // padding
+}
 /**
  * Routes
  */
+app.get('/sentiment', function(req, res){
+    var endDate = new Date();
+    var startDate = new Date(endDate - 2880 * 60000);
+    console.log('date:'+parseDate(endDate));
+    var endDateString = encodeURIComponent(parseDate(endDate));
+    var startDateString = encodeURIComponent(parseDate(startDate));
+    var sentimentUrl = 'https://psychsignal.com/api/sentiments?api_key='+psychKey+'&symbol=EURUSD&from='+startDateString+'&to='+endDateString+'&period=5&format=json&callback=fillSentiment';
+    console.log(sentimentUrl);
+    request(sentimentUrl, function(error, response, body) {
+        res.send(body);
+    });
+});
+
 app.get('/', function(req, res){
     res.render('index');
 });
